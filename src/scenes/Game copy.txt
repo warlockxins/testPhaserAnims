@@ -1,0 +1,484 @@
+import { Scene } from 'phaser';
+import sebastianAnims from './sebastian.json'; // point of interest 1
+import butcherAnims from './butcher.json'
+import { AnimationDirection, AnimationConfig, AnimationAvaliableDirections } from './AnimationDirection';
+import { PlayableCharacterController } from './playerAnimations';
+
+import VisibilityPolygon from './shadows/visibility_polygon_dev';
+
+let game;
+let gameOptions = {
+
+    // number of boxes in the game
+    boxes: 1,
+
+    // size of each box
+    sizeRange: {
+
+        // min size, in pixels
+        min: 50,
+
+        // max size, in pixels
+        max: 120
+    }
+}
+
+const spriteSheetName = 'spriteSheet';
+
+// point of interest 3
+type typeOfImportedSebastianAnimation = typeof sebastianAnims;
+type SebastianAvailableAnimsFromConfig = keyof typeOfImportedSebastianAnimation;
+type SebastianDirectionalAnim = `sebastian-${SebastianAvailableAnimsFromConfig}-${AnimationDirection}`
+
+// point of interest 4
+function createAnimations(scene: Scene, characterName: string, animConfig: AnimationConfig, spriteSheetName: string) {
+
+    // walk, run, idle, death, walkCrouch, armActionTake
+    const baseAnimationKeys = Object.keys(animConfig);
+
+    const animationNames = [];
+
+    AnimationAvaliableDirections.forEach((direction) => {
+        baseAnimationKeys.forEach((baseAnimation) => {
+
+            const frames = animConfig[baseAnimation][direction].map((f) => ({
+                key: spriteSheetName,
+                frame: f,
+            }));
+
+            const animationNameWithDirection = `${characterName}-${baseAnimation}-${direction}`;
+
+            scene.anims.create({
+                key: animationNameWithDirection,
+                frames: frames,
+                frameRate: 10,//frames.length,
+                repeat: -1,
+            });
+
+            animationNames.push(animationNameWithDirection);
+        });
+    });
+}
+
+export class Game extends Scene {
+
+    characterName = 'sebastian';
+    cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+    player: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    facing: { vertical: 'N' | 'S' | ''; horizontal: 'E' | ''; } = { vertical: '', horizontal: '' };
+    baseAnim: SebastianAvailableAnimsFromConfig;
+    butch: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+    isCrouching: boolean;
+    fx: Phaser.FX.Wipe;
+
+    controller: PlayableCharacterController;
+    container: Phaser.GameObjects.Container;
+    currentHealth: number;
+    maxWidth: number;
+    bar: Phaser.GameObjects.Graphics;
+    box: Phaser.GameObjects.Graphics;
+    lightGraphics: Phaser.GameObjects.Graphics;
+    lightLines: Phaser.GameObjects.Graphics;
+    triangleGraphics: Phaser.GameObjects.Graphics;
+    mesh: Phaser.GameObjects.Mesh;
+
+
+
+
+    constructor() {
+        super('Game');
+
+        game = this;
+    }
+
+    preload() {
+        this.load.setPath('assets');
+        this.load.image('background', 'meatBasementTopMap.png');
+
+        this.load.atlas(spriteSheetName, 'spriteSheet.png', 'spriteSheet.json');
+
+        this.load.atlas("butcherSpriteSheet", 'butcherSpriteSheet.png', 'butcherSpriteSheet.json');
+        // debugger
+    }
+
+    create() {
+
+        this.add.image(500, 0, 'background').setTint(0x343a40);
+
+        this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.player = this.physics.add.sprite(400, 300);
+        // this.player.setSize(60, 160);
+        this.player.setScale(2);
+        this.player.setOrigin(0.5, 1);
+
+        this.fx = this.player.preFX.addWipe(0.01, 1, 1);
+        // this.fx.progress = 0.5;
+
+        this.player.setCollideWorldBounds(true);
+
+        this.controller = new PlayableCharacterController(this.player, this.cursors)
+
+        this.facing = {
+            vertical: 'S',
+            horizontal: '',
+        }
+
+        this.baseAnim = 'idle';
+
+        createAnimations(this, this.characterName, sebastianAnims, spriteSheetName);
+
+        createAnimations(this, "butcher", butcherAnims, "butcherSpriteSheet");
+
+
+        this.butch = this.physics.add.sprite(500, 300, '');
+        this.butch.setDepth(300);
+        this.butch.setSize(30, 80);
+        this.butch.setOrigin(0.5, 1)
+        // this.butch.setScale(2);
+        this.butch.play('butcher-slice-S');
+
+        let isUp = false
+        this.input.on('pointerdown', () => {
+            isUp = !isUp;
+            if (isUp) {
+                this.updateSebastianAnim('sebastian-walk-NE') // point of interest 5
+            } else {
+                this.butch.play("sebastian-run-E");
+            }
+
+            this.takeDamage(15);
+
+        }, this);
+
+        const anim: SebastianDirectionalAnim = 'sebastian-idle-S';
+        this.player.play(anim);
+
+
+
+        // Extra visuals
+        const label = this.add.text(0, -40, 'HP: 100', { fontSize: '16px', fill: '#fff' });
+        this.box = this.add.graphics();
+        // box.fillStyle(0xff0000, 0.5);
+        // box.fillRect(-32, -40, 64, 16);
+
+        // Group visuals with a container that follows the sprite
+        this.container = this.add.container(this.player.x, this.player.y, [this.box, label]);
+
+        this.currentHealth = 100;
+        this.maxWidth = 150;
+
+        this.drawBar(this.maxWidth);
+
+        this.createShadowScene();
+    }
+
+    drawBar(width: number) {
+        this.box.clear();
+        if (width > this.maxWidth / 2) {
+            this.box.fillStyle(0x00ffff, 1);
+        } else { this.box.fillStyle(0xff0000, 1); }
+        // -32, -40, 64, 16
+        this.box.fillRect(-this.maxWidth / 2, -40, width, 16);
+    }
+
+    takeDamage(amount) {
+        const newHealth = Phaser.Math.Clamp(this.currentHealth - amount, 0, 100);
+        const newWidth = (newHealth / 100) * this.maxWidth;
+
+        this.tweens.addCounter({
+            from: (this.currentHealth / 100) * this.maxWidth,
+            to: newWidth,
+            duration: 200,
+            onUpdate: tween => {
+                this.drawBar(tween.getValue());
+            }
+        });
+
+        this.currentHealth = newHealth;
+    }
+    updateSebastianAnim(anim: SebastianDirectionalAnim) {
+        this.butch.play(anim)
+    }
+
+    update() {
+
+        this.controller.update();
+        // this.updateWithStringComparisons()
+        this.container.x = this.player.x;
+        this.container.y = this.player.y;
+        this.player.setDepth(this.player.y)
+    }
+
+    updateWithStringComparisons() {
+
+        this.player.setVelocity(0);
+        let isMoving = false;
+
+        if (this.cursors.left.isDown) {
+            this.player.setVelocityX(-200);
+            this.facing.horizontal = 'E';
+            this.player.flipX = true;
+            isMoving = true;
+        }
+        else if (this.cursors.right.isDown) {
+            this.player.setVelocityX(200);
+            this.facing.horizontal = 'E';
+
+            this.player.flipX = false;
+            isMoving = true;
+        }
+
+        if (this.cursors.up.isDown) {
+            this.player.setVelocityY(-200);
+            this.facing.vertical = 'N';
+            isMoving = true;
+        }
+        else if (this.cursors.down.isDown) {
+            this.player.setVelocityY(200);
+            this.facing.vertical = 'S';
+            isMoving = true;
+        }
+
+        if (isMoving) {
+
+            if (!this.cursors.down.isDown && !this.cursors.up.isDown) {
+                this.facing.vertical = '';
+            }
+
+            if (!this.cursors.left.isDown && !this.cursors.right.isDown) {
+                this.facing.horizontal = '';
+            }
+
+            if (this.cursors.shift.isDown) {
+                this.baseAnim = 'walkCrouch';
+            } else {
+                this.baseAnim = 'walk';
+            }
+        } else {
+            if (this.cursors.space.isDown) {
+                this.baseAnim = 'armActionTake';
+            }
+            else if (this.cursors.shift.isDown) {
+                // this.player.setOrigin(0.5, 0);
+                if (!this.isCrouching) {
+                    this.isCrouching = true;
+                    this.tweens.add({
+                        targets: this.player,
+                        originY: 0, // target value for originY
+                        duration: 100, // duration in milliseconds
+                        ease: 'Linear', // easing function
+                    });
+
+                    this.tweens.add({
+                        targets: this.fx,
+                        progress: 0.5,
+                        repeatDelay: 1000,
+                        hold: 1000,
+                        yoyo: true,
+                        repeat: false,
+                        duration: 200
+                    });
+                }
+            }
+            else if (this.cursors.shift.isUp) {
+                // this.player.setOrigin(0.5, 0.1);
+                if (this.isCrouching) {
+                    this.isCrouching = false;
+                    this.tweens.add({
+                        targets: this.player,
+                        originY: 0.1, // target value for originY
+                        duration: 200, // duration in milliseconds
+                        ease: 'Linear', // easing function
+                    });
+                }
+            }
+            else {
+                this.baseAnim = 'idle';
+            }
+        }
+
+        const direction: AnimationDirection = `${this.facing.vertical}${this.facing.horizontal}` as AnimationDirection
+        const newAnimation: SebastianDirectionalAnim = `sebastian-${this.baseAnim}-${direction}`;
+
+        if (this.player.anims.getName() !== newAnimation) {
+            this.player.play(newAnimation);
+        }
+        this.player.setDepth(this.player.y)
+    }
+
+
+    // Mesh stuff
+    createMesh() {
+
+
+        this.mesh = this.add.mesh(250, 250);
+
+        // Colors per vertex: 0xFF0000 (Red), 0x00FF00 (Green), 0x0000FF (Blue)
+        const colors = [0xFF0000, 0x00FF00, 0x0000FF];
+
+        // Alpha per vertex (optional)
+        const alphas = [1, 0.6, 1];
+
+        const vertices = [
+            0, 128,
+            128, 128,
+            0, 0,
+            128, 0
+        ];
+
+        const uvs = [
+            0, 1,
+            1, 1,
+            0, 0,
+            1, 0
+        ];
+
+        const indices = [0, 2, 1, 2, 3, 1];
+
+        this.mesh.addVertices(vertices, uvs, indices, false, undefined, colors, alphas);
+        // Note: Otherwise the added points will be "behind" the camera! This value will project vertex `x` & `y` values 1:1 to pixel values.
+        this.mesh.hideCCW = false;
+        this.mesh.setOrtho(this.mesh.width, this.mesh.height);
+    }
+
+    /// SHADOW stuff
+
+    createShadowScene() {
+
+        // graphic object used to draw walls
+        this.wallGraphics = this.add.graphics();
+        this.wallGraphics.lineStyle(1, 0x00ff00);
+
+        // graphic object used to draw rays of light
+        const g: Phaser.GameObjects.Graphics = this.add.graphics();
+        this.lightGraphics = g
+        // g.setBlendMode(Phaser.BlendModes.MULTIPLY);
+
+        this.lightLines = this.add.graphics();
+
+        this.triangleGraphics = this.add.graphics();
+
+        // array with all polygons in game
+        this.polygons = [];
+
+        // add random boxes
+        // for (let i = 0; i < gameOptions.boxes; i++) {
+        this.addRandomBox(250, 250);
+
+        this.addRandomBox(450, 350);
+        // }
+
+        // walls around game perimeter
+        // this.polygons.push(
+        //     [[1, 1], [this.game.config.width - 1, 1], [this.game.config.width - 2, this.game.config.height - 2], [1, this.game.config.height - 2]]
+        // );
+
+        // listener for input movement
+        this.input.on("pointerdown", this.renderLight, this);
+
+        this.createMesh();
+    }
+    addRandomBox(startX, startY) {
+        var width = 150;
+        var height = 70;
+        // draw the box
+        this.wallGraphics.strokeRect(startX, startY, width, height);
+
+        // insert box vertices into polygons array
+        this.polygons.push([
+            [startX, startY],
+            [startX + width, startY],
+            [startX + width, startY + height],
+            [startX, startY + height],
+            // [startX, startY + 10]
+        ]
+        );
+    }
+
+    // method to render the light
+    renderLight(pointer) {
+
+        // determine light polygon starting from pointer coordinates
+        let visibility = this.createLightPolygon(pointer.x, pointer.y);
+
+        console.log(visibility);
+
+        // clear and prepare lightGraphics graphic object
+
+
+        // this.drawLightPolies(visibility);
+        this.drawLightLines(visibility);
+
+    }
+
+    drawLightLines(visibility: [number, number][][]) {
+        this.lightLines.clear();
+        if (!visibility?.length) {
+            return;
+        }
+
+        this.lightLines.lineStyle(5, 0xFF00, 1.0);
+        for (let i = 0; i < visibility.length; i++) {
+
+            const one = visibility[i];
+            console.log('--->', one[0]);
+            this.lightLines.moveTo(visibility[i][0][0], visibility[i][0][1]);
+            // draw a line to i-th light polygon vertex
+            this.lightLines.lineTo(visibility[i][1][0], visibility[i][1][1]);
+        }
+        this.lightLines.strokePath(); // Render the line
+    }
+
+    drawLightTriangles(visibility: [number, number][][]) {
+
+    }
+
+    drawLightPolies(visibility: any[]) {
+        this.lightGraphics.clear();
+        if (!visibility?.length) {
+            return;
+        }
+
+        // this.lightGraphics.
+        // this.lightGraphics.lineStyle(2, 0xff8800);
+        this.lightGraphics.fillStyle(0xffff00);
+
+        // begin a drawing path
+        this.lightGraphics.beginPath();
+
+        // move the graphic pen to first vertex of light polygon
+        this.lightGraphics.moveTo(visibility[0][0], visibility[0][1]);
+
+        // loop through all light polygon vertices
+        for (let i = 1; i <= visibility.length; i++) {
+
+            // draw a line to i-th light polygon vertex
+            this.lightGraphics.lineTo(visibility[i % visibility.length][0], visibility[i % visibility.length][1]);
+        }
+
+        // close, stroke and fill light polygon
+        this.lightGraphics.closePath();
+        this.lightGraphics.fillPath();
+        // this.lightGraphics.strokePath();
+    }
+
+    // method to create light polygon using visibility_polygon.js
+    createLightPolygon(x, y) {
+        let segments = VisibilityPolygon.convertToSegments(this.polygons);
+        segments = VisibilityPolygon.breakIntersections(segments);
+        console.log('segments', segments);
+        let position = [x, y];
+        // if (VisibilityPolygon.inPolygon(position, this.polygons[this.polygons.length - 1])) {
+        return VisibilityPolygon.computeInverse(position, segments);
+        // }
+        // return null;
+    }
+}
+
+
+
+
+
+
+

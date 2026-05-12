@@ -1,0 +1,134 @@
+{
+    "frames": [
+        {
+            "frame": 1,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8015,
+                    "angleDegree": 45.9217,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7184,
+                    "y": 0.6956,
+                    "angle": -3.0898,
+                    "angleDegree": -177.0335,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 0.6524,
+                    "y": -0.578,
+                    "angle": -0.5073,
+                    "angleDegree": -29.0687,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 10,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.821,
+                    "angleDegree": 47.0391,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7318,
+                    "y": 0.6815,
+                    "angle": 1.9893,
+                    "angleDegree": 113.9788,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.8971,
+                    "y": 0.1632,
+                    "angle": 3.0768,
+                    "angleDegree": 176.2896,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 13,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8246,
+                    "angleDegree": 47.246,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7343,
+                    "y": 0.6789,
+                    "angle": 1.7798,
+                    "angleDegree": 101.975,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.9819,
+                    "y": 0.4142,
+                    "angle": 0.9791,
+                    "angleDegree": 56.0957,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 16,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8204,
+                    "angleDegree": 47.0043,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7314,
+                    "y": 0.6819,
+                    "angle": 2.0259,
+                    "angleDegree": 116.0771,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.877,
+                    "y": 0.1213,
+                    "angle": -0.0273,
+                    "angleDegree": -1.5663,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 24,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8015,
+                    "angleDegree": 45.9217,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7184,
+                    "y": 0.6956,
+                    "angle": -3.0898,
+                    "angleDegree": -177.0335,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 0.6524,
+                    "y": -0.578,
+                    "angle": -0.5073,
+                    "angleDegree": -29.0687,
+                    "parent": "root2"
+                }
+            }
+        }
+    ]
+}
