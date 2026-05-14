@@ -1,54 +1,148 @@
-import { Scene } from 'phaser';
-import bones from './anim_2d.json';
+import { Scene } from "phaser";
+import bones from "./anim_2d.json";
+
+interface Bone {
+  x: number;
+  y: number;
+  angle: number;
+  angleDegree: number;
+  parent: string | null;
+}
+
+interface FrameSpeed {
+  xSpeed: number;
+  ySpeed: number;
+  angleSpeed: number;
+  bone: Bone;
+}
+
+interface FrameBones {
+  toTime: number;
+  frameSpeeds: FrameSpeed[];
+}
 
 export class BoneRenderer {
-    scene: Scene;
-    graphics!: Phaser.GameObjects.Graphics;
-    container: Phaser.GameObjects.Container;
+  scene: Scene;
+  graphics!: Phaser.GameObjects.Graphics;
+  container!: Phaser.GameObjects.Container;
+  sprites: Phaser.GameObjects.Sprite[] = [];
 
-    constructor(scene: Scene) {
-        this.scene = scene;
-    }
+  currentFrame = 0;
 
-    init() {
+  tempStepper = 0;
+  speeds: FrameBones[] = [];
 
-        // this.graphics = this.scene.add.graphics();
-        // this.graphics.setDepth(1000000);
+  constructor(scene: Scene) {
+    this.scene = scene;
+  }
 
-        const firstFrameBones = bones.frames[1].bones;
-        // this.graphics.fillStyle(0xffff00);
-        // this.graphics.lineStyle(5, 0xFF00FF, 1.0);
+  init() {
+    // this.graphics = this.scene.add.graphics();
+    // this.graphics.setDepth(1000000);
 
-        // this.graphics.beginPath();
+    // bones.frames.forEach((frame) => {
+    //   console.log("->", frame.frame);
+    // });
+    for (let index = 0; index < bones.frames.length - 1; index++) {
+      const b1 = bones.frames[index];
+      const b2 = bones.frames[index + 1];
 
-        // Object.values(firstFrameBones).forEach(bone => {
+      if (b2) {
+        const frame1 = b1.frame;
+        const frame2 = b2.frame;
 
-        //     if (bone.parent) {
-        //         // @ts-ignore
-        //         const parent = firstFrameBones[bone.parent];
-        //         this.graphics.moveTo(parent.x * 100, -parent.y * 100 + 500);
+        const diffFrameTime = ((frame2 - frame1) / 24) * 1000;
 
-        //         this.graphics.lineTo(bone.x * 100, -bone.y * 100 + 500);
-        //     }
+        // console.log("....", diffFrameTime);
 
-        // });
+        const b1Bones = Object.values(b1.bones);
+        const b2Bones = Object.values(b2.bones);
 
-        // this.graphics.strokePath();
+        const frameSpeeds: FrameSpeed[] = [];
 
-        const sprites = [];
-        Object.values(firstFrameBones).forEach(bone => {
-            // let circle = new Phaser.Geom.Circle(bone.x * 100, -bone.y * 100, 5); // x, y, radius
-            // this.graphics.fillCircleShape(circle);
+        // console.log("for dir", b1Bones, b2Bones);
+        b1Bones.forEach((bone, bIndex) => {
+          const nextFrameBone = b2Bones[bIndex];
 
-            const s = this.scene.add.sprite(bone.x * 100, -bone.y * 100, "logo");
-            s.setScale(0.2);
-            s.setRotation(bone.angle);
-            s.setOrigin(0.5, 1);
+          const xSpeed = ((nextFrameBone.x - bone.x) * 100) / diffFrameTime;
+          const ySpeed = ((nextFrameBone.y - bone.y) * 100) / diffFrameTime;
 
-            sprites.push(s);
+          const nextAngle =
+            nextFrameBone.angleDegree < 0
+              ? 360 + nextFrameBone.angleDegree
+              : nextFrameBone.angleDegree;
+          const curAngle =
+            bone.angleDegree < 0 ? 360 + bone.angleDegree : bone.angleDegree;
+
+          const angleSpeed = (nextAngle - curAngle) / diffFrameTime;
+
+          frameSpeeds.push({
+            xSpeed,
+            ySpeed,
+            angleSpeed,
+            // toTime: frame2,
+            bone: {
+              x: bone.x * 100,
+              y: bone.y * 100,
+              angle: bone.angle,
+              angleDegree: curAngle,
+              parent: bone.parent,
+            },
+          });
         });
 
-        this.container = this.scene.add.container(200, 500, sprites);
-        this.container.setScale(-1, 1);
+        this.speeds.push({
+          frameSpeeds,
+          toTime: (frame2 / 24) * 1000,
+        });
+      }
     }
+    this.currentFrame = 0;
+    const firstFrameBones = bones.frames[0].bones;
+
+    Object.values(firstFrameBones).forEach((bone) => {
+      const s = this.scene.add.sprite(bone.x * 100, -bone.y * 100, "logo");
+      s.setScale(0.2);
+      s.setRotation(bone.angle);
+      s.setOrigin(0.5, 1);
+
+      this.sprites.push(s);
+    });
+
+    this.container = this.scene.add.container(200, 500, this.sprites);
+    this.container.setScale(-1, 1);
+
+    console.log(this.speeds);
+  }
+
+  update(deltaIn: number) {
+    const delta = deltaIn / 10;
+    this.tempStepper += delta;
+    let currentSpeeds = this.speeds[this.currentFrame];
+
+    // snap to next frame
+    if (this.tempStepper > currentSpeeds.toTime) {
+      this.currentFrame += 1;
+
+      if (this.currentFrame >= this.speeds.length) {
+        this.currentFrame = 0;
+        this.tempStepper = 0;
+      }
+      currentSpeeds = this.speeds[this.currentFrame];
+
+      currentSpeeds.frameSpeeds.forEach((speeds, index) => {
+        const s = this.sprites[index];
+        s.setPosition(speeds.bone.x, -speeds.bone.y);
+        s.setAngle(speeds.bone.angleDegree);
+      });
+      return;
+    }
+
+    // move all bones towards next frame
+    currentSpeeds.frameSpeeds.forEach((speeds, index) => {
+      const s = this.sprites[index];
+      s.setPosition(s.x + speeds.xSpeed * delta, s.y - speeds.ySpeed * delta);
+      s.setAngle(s.angle + speeds.angleSpeed * delta);
+    });
+  }
 }
