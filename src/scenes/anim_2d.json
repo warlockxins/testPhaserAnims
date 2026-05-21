@@ -6,22 +6,152 @@
                 "root": {
                     "x": 0.0,
                     "y": 0.0,
-                    "angle": 0.8015,
-                    "angleDegree": 45.9217,
+                    "angle": 0.8057,
+                    "angleDegree": 46.1635,
                     "parent": null
                 },
                 "root2": {
-                    "x": 0.7184,
-                    "y": 0.6956,
-                    "angle": -3.0898,
-                    "angleDegree": -177.0335,
+                    "x": 0.7213,
+                    "y": 0.6926,
+                    "angle": 2.9472,
+                    "angleDegree": 168.8644,
                     "parent": "root"
                 },
                 "last": {
-                    "x": 0.6524,
-                    "y": -0.578,
-                    "angle": -0.5073,
-                    "angleDegree": -29.0687,
+                    "x": 0.9676,
+                    "y": -0.5588,
+                    "angle": -1.6734,
+                    "angleDegree": -95.8781,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 2,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8199,
+                    "angleDegree": 46.9784,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7311,
+                    "y": 0.6823,
+                    "angle": 2.869,
+                    "angleDegree": 164.383,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.0744,
+                    "y": -0.546,
+                    "angle": -1.8206,
+                    "angleDegree": -104.312,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 3,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8592,
+                    "angleDegree": 49.2311,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7573,
+                    "y": 0.653,
+                    "angle": 2.6528,
+                    "angleDegree": 151.9934,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.3562,
+                    "y": -0.473,
+                    "angle": -2.2276,
+                    "angleDegree": -127.6293,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 5,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.9931,
+                    "angleDegree": 56.9002,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.8377,
+                    "y": 0.5461,
+                    "angle": 1.9167,
+                    "angleDegree": 109.816,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 2.0376,
+                    "y": 0.1137,
+                    "angle": 2.6702,
+                    "angleDegree": 152.9927,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 7,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.1671,
+                    "angleDegree": 66.8699,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.9196,
+                    "y": 0.3928,
+                    "angle": 0.9597,
+                    "angleDegree": 54.9853,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.9642,
+                    "y": 1.1246,
+                    "angle": 0.8692,
+                    "angleDegree": 49.8014,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 9,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.3411,
+                    "angleDegree": 76.8397,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.9737,
+                    "y": 0.2277,
+                    "angle": 0.0027,
+                    "angleDegree": 0.1547,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 0.9772,
+                    "y": 1.5031,
+                    "angle": -0.9318,
+                    "angleDegree": -53.39,
                     "parent": "root2"
                 }
             }
@@ -32,22 +162,48 @@
                 "root": {
                     "x": 0.0,
                     "y": 0.0,
-                    "angle": 0.821,
-                    "angleDegree": 47.0391,
+                    "angle": 1.4156,
+                    "angleDegree": 81.1056,
                     "parent": null
                 },
                 "root2": {
-                    "x": 0.7318,
-                    "y": 0.6815,
-                    "angle": 1.9893,
-                    "angleDegree": 113.9788,
+                    "x": 0.988,
+                    "y": 0.1546,
+                    "angle": -0.4068,
+                    "angleDegree": -23.3065,
                     "parent": "root"
                 },
                 "last": {
-                    "x": 1.8971,
-                    "y": 0.1632,
-                    "angle": 3.0768,
-                    "angleDegree": 176.2896,
+                    "x": 0.4834,
+                    "y": 1.3259,
+                    "angle": -1.7025,
+                    "angleDegree": -97.544,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 11,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.475,
+                    "angleDegree": 84.5087,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.9954,
+                    "y": 0.0957,
+                    "angle": -0.7334,
+                    "angleDegree": -42.0227,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 0.1416,
+                    "y": 1.0432,
+                    "angle": -2.3172,
+                    "angleDegree": -132.7681,
                     "parent": "root2"
                 }
             }
@@ -58,22 +214,48 @@
                 "root": {
                     "x": 0.0,
                     "y": 0.0,
-                    "angle": 0.8246,
-                    "angleDegree": 47.246,
+                    "angle": 1.5285,
+                    "angleDegree": 87.5763,
                     "parent": null
                 },
                 "root2": {
-                    "x": 0.7343,
-                    "y": 0.6789,
-                    "angle": 1.7798,
-                    "angleDegree": 101.975,
+                    "x": 0.9991,
+                    "y": 0.0423,
+                    "angle": -1.0279,
+                    "angleDegree": -58.8937,
                     "parent": "root"
                 },
                 "last": {
-                    "x": 1.9819,
-                    "y": 0.4142,
-                    "angle": 0.9791,
-                    "angleDegree": 56.0957,
+                    "x": -0.0929,
+                    "y": 0.7012,
+                    "angle": -2.8714,
+                    "angleDegree": -164.5193,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 15,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.4655,
+                    "angleDegree": 83.9671,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.9945,
+                    "y": 0.1051,
+                    "angle": -0.6814,
+                    "angleDegree": -39.044,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 0.1911,
+                    "y": 1.0957,
+                    "angle": -2.2194,
+                    "angleDegree": -127.1621,
                     "parent": "root2"
                 }
             }
@@ -84,22 +266,152 @@
                 "root": {
                     "x": 0.0,
                     "y": 0.0,
-                    "angle": 0.8204,
-                    "angleDegree": 47.0043,
+                    "angle": 1.3965,
+                    "angleDegree": 80.0156,
                     "parent": null
                 },
                 "root2": {
-                    "x": 0.7314,
-                    "y": 0.6819,
-                    "angle": 2.0259,
-                    "angleDegree": 116.0771,
+                    "x": 0.9849,
+                    "y": 0.1734,
+                    "angle": -0.3022,
+                    "angleDegree": -17.312,
                     "parent": "root"
                 },
                 "last": {
-                    "x": 1.877,
-                    "y": 0.1213,
-                    "angle": -0.0273,
-                    "angleDegree": -1.5663,
+                    "x": 0.6053,
+                    "y": 1.391,
+                    "angle": -1.5056,
+                    "angleDegree": -86.2624,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 17,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.3113,
+                    "angleDegree": 75.1307,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.9665,
+                    "y": 0.2566,
+                    "angle": 0.1667,
+                    "angleDegree": 9.5535,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.1782,
+                    "y": 1.5143,
+                    "angle": -0.6231,
+                    "angleDegree": -35.7015,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 19,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.118,
+                    "angleDegree": 64.0541,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.8992,
+                    "y": 0.4375,
+                    "angle": 1.23,
+                    "angleDegree": 70.4715,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 2.1012,
+                    "y": 0.8639,
+                    "angle": 1.3779,
+                    "angleDegree": 78.9463,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 20,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 1.0229,
+                    "angleDegree": 58.6091,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.8536,
+                    "y": 0.5209,
+                    "angle": 1.7526,
+                    "angleDegree": 100.4172,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 2.108,
+                    "y": 0.2903,
+                    "angle": 2.3615,
+                    "angleDegree": 135.3041,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 21,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.9377,
+                    "angleDegree": 53.7242,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.8062,
+                    "y": 0.5917,
+                    "angle": 2.2215,
+                    "angleDegree": 127.2827,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.821,
+                    "y": -0.1809,
+                    "angle": -3.0392,
+                    "angleDegree": -174.1349,
+                    "parent": "root2"
+                }
+            }
+        },
+        {
+            "frame": 23,
+            "bones": {
+                "root": {
+                    "x": 0.0,
+                    "y": 0.0,
+                    "angle": 0.8225,
+                    "angleDegree": 47.1281,
+                    "parent": null
+                },
+                "root2": {
+                    "x": 0.7329,
+                    "y": 0.6804,
+                    "angle": 2.8547,
+                    "angleDegree": 163.5597,
+                    "parent": "root"
+                },
+                "last": {
+                    "x": 1.0938,
+                    "y": -0.5429,
+                    "angle": -1.8476,
+                    "angleDegree": -105.8615,
                     "parent": "root2"
                 }
             }
@@ -110,22 +422,22 @@
                 "root": {
                     "x": 0.0,
                     "y": 0.0,
-                    "angle": 0.8015,
-                    "angleDegree": 45.9217,
+                    "angle": 0.8057,
+                    "angleDegree": 46.1635,
                     "parent": null
                 },
                 "root2": {
-                    "x": 0.7184,
-                    "y": 0.6956,
-                    "angle": -3.0898,
-                    "angleDegree": -177.0335,
+                    "x": 0.7213,
+                    "y": 0.6926,
+                    "angle": 2.9472,
+                    "angleDegree": 168.8644,
                     "parent": "root"
                 },
                 "last": {
-                    "x": 0.6524,
-                    "y": -0.578,
-                    "angle": -0.5073,
-                    "angleDegree": -29.0687,
+                    "x": 0.9676,
+                    "y": -0.5588,
+                    "angle": -1.6734,
+                    "angleDegree": -95.8781,
                     "parent": "root2"
                 }
             }
